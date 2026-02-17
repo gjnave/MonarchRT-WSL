@@ -17,12 +17,7 @@ Krish Agarwal<sup>1</sup>, Zhuoming Chen<sup>1</sup>, Cheng Luo, Yongqi Chen<sup
 
 This repository is an implementation of MonarchRT, a method to sparsely parameterize attention maps in video diffusion transformer (DiT) models using *Monarch matrices*, achieving minimal quality degradation. MonarchRT is effective even for real-time video DiTs that employ few-step diffusion  and autoregressive generation. Using our efficient Triton kernel implementation, MonarchRT achieves, for the first time, **true real-time 16 FPS video generation with Self-Forcing on a single RTX 5090** while continuing to match quality with the dense model (even under a smaller training budget).
 
-<p align="center">  
- <img src="figures/regular_vs_tiled_monarch.png" width="65%"/>
-</p>
-<p align="center">  
- <img src="figures/kernel_vis.png" width="65%"/>
-</p>
+https://github.com/user-attachments/assets/ec577312-b8b0-42c9-b0b8-0b6eac8ae7d8
 
 ## Quick Start
 
