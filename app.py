@@ -20,16 +20,30 @@ from pathlib import Path
 # ─────────────────────────────────────────────
 
 def discover_configs():
-    configs = glob.glob("configs/*.yaml")
-    configs = sorted(configs) if configs else ["configs/self_forcing_monarch_dmd.yaml"]
-    preferred = [c for c in configs if "monarch" in c.lower()]
-    return preferred + [c for c in configs if c not in preferred]
+    configs = sorted(glob.glob("configs/*.yaml"))
+
+    default = "configs/self_forcing_dmd.yaml"
+
+    if default in configs:
+        configs.remove(default)
+        configs.insert(0, default)
+
+    return configs or [default]
+
 
 def discover_checkpoints():
-    ckpts = glob.glob("checkpoints/*.pt") + glob.glob("checkpoints/*.safetensors")
-    ckpts = sorted(ckpts) if ckpts else ["checkpoints/self_forcing_monarch_dmd.pt"]
-    preferred = [c for c in ckpts if "monarch" in c.lower()]
-    return preferred + [c for c in ckpts if c not in preferred]
+    ckpts = sorted(
+        glob.glob("checkpoints/*.pt") +
+        glob.glob("checkpoints/*.safetensors")
+    )
+
+    default = "checkpoints/self_forcing_dmd.pt"
+
+    if default in ckpts:
+        ckpts.remove(default)
+        ckpts.insert(0, default)
+
+    return ckpts or [default]
 
 # ─────────────────────────────────────────────
 # PERSISTENT SERVER MANAGER
@@ -285,7 +299,8 @@ def run_inference(
 
     run_id        = str(uuid.uuid4())[:8]
     timestamp     = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir    = f"outputs/run_{timestamp}_{run_id}"
+    config_stem   = Path(config_path).stem          # e.g. "self_forcing_monarch_dmd"
+    output_dir    = f"videos/{config_stem}/run_{timestamp}_{run_id}"
     log_lines     = []
     start_time    = time.time()
 
@@ -417,6 +432,14 @@ body, .gradio-container {
 .sf-header .eyebrow {
     font-family: var(--mono);
     font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.sf-header .fame {
+    font-family: var(--mono);
+    font-size: 25px;
     letter-spacing: 0.2em;
     color: var(--accent);
     text-transform: uppercase;
@@ -632,7 +655,7 @@ with gr.Blocks(title="Self-Forcing — Video Generation") as demo:
             Model loads once &nbsp;·&nbsp; ~14s per generation &nbsp;·&nbsp;
             480×832px &nbsp;·&nbsp; 21 frames &nbsp;·&nbsp; 16fps
         </div>
-        <div class="eyebrow"><a href="https://getgoingfast.pro">GET GOING FAST </a></div>
+        <div class="fame"><a href="https://getgoingfast.pro">GET GOING FAST </a></div>
     </div>
     """)
 
@@ -652,6 +675,9 @@ with gr.Blocks(title="Self-Forcing — Video Generation") as demo:
                 placeholder="Longer, richer description fed directly to the model. Short prompt used for file naming only.",
                 lines=2,
             )
+
+            gr.HTML('<hr class="divider">')
+            generate_btn = gr.Button("GENERATE VIDEO", elem_id="generate-btn", variant="primary")
 
             gr.HTML('<hr class="divider">')
             gr.HTML('<div class="panel-label">Model</div>')
@@ -713,8 +739,6 @@ with gr.Blocks(title="Self-Forcing — Video Generation") as demo:
                 with gr.Row():
                     save_with_index = gr.Checkbox(label="Save by Index", value=True)
 
-            gr.HTML('<hr class="divider">')
-            generate_btn = gr.Button("GENERATE VIDEO", elem_id="generate-btn", variant="primary")
 
         # ── RIGHT: output ─────────────────────────
         with gr.Column(scale=7):
