@@ -3,6 +3,9 @@
 
 <h1>A GET GOING FAST (Quick) Installation can be found here: <a href="">...</a></h1>
 
+<h1> A WSL w/ CUDA and Miniconda Installer can be found here: <a href="https://wsl.getgoingfast.pro">WSL PACKAGE</a> </hi>
+<br><br>
+<hr>
 # MonarchRT: Efficient Attention for Real-Time Video Generation
 
 <div align="center">
