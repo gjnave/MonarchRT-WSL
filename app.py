@@ -759,8 +759,8 @@ with gr.Blocks(title="Self-Forcing — Video Generation") as demo:
 
 if __name__ == "__main__":
     demo.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
+        server_name="127.0.0.1",
+        server_port=7865,
         share=False,
         show_error=True,
         css=CSS,
